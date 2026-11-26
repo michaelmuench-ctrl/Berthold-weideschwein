@@ -1,4 +1,5 @@
 name: shop-documents
+run-name: Shop-Dokumente erzeugen (${{ github.run_number }})
 
 on:
   push:

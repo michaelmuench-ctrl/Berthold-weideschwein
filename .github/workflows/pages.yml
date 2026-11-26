@@ -1,4 +1,5 @@
 name: pages-deploy
+run-name: Pages-Deploy (${{ github.run_number }})
 
 on:
   workflow_dispatch:

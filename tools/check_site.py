@@ -136,6 +136,33 @@ def main():
     check("no fixed px width > 1200", not re.search(r"width:\s*[2-9]\d{3,}px", css))
     check("skip link", bool(soup.find(class_="skip-link")))
 
+    import json
+    import xml.etree.ElementTree as ET
+
+    check("sitemap.xml parses and has <url>", (ROOT / "sitemap.xml").is_file() and bool(ET.parse(ROOT / "sitemap.xml").getroot().find(".//{http://www.sitemaps.org/schemas/sitemap/0.9}url")))
+    robots = (ROOT / "robots.txt").read_text(encoding="utf-8") if (ROOT / "robots.txt").is_file() else ""
+    check("robots.txt references sitemap", "sitemap.xml" in robots.lower())
+    check("canonical link", bool(soup.find("link", rel="canonical")))
+    check("og:title + og:image", bool(soup.find("meta", property="og:title")) and bool(soup.find("meta", property="og:image")))
+    check("theme-color meta", bool(soup.find("meta", attrs={"name": "theme-color"})))
+    ld = soup.find("script", type="application/ld+json")
+    ld_ok = False
+    if ld:
+        try:
+            ld_ok = json.loads(ld.string).get("@type") == "LocalBusiness"
+        except Exception:
+            ld_ok = False
+    check("JSON-LD LocalBusiness", ld_ok)
+    check("hero preload", bool(soup.find("link", rel="preload", href="assets/img/hero.jpg")))
+    lazy_imgs = [i for i in soup.find_all("img") if i.get("loading") == "lazy"]
+    check("all lazy imgs have decoding=async", all(i.get("decoding") == "async" for i in lazy_imgs), f"{len(lazy_imgs)} lazy imgs")
+
+    nav_labels = ["home", "fleisch / shop", "zucht", "ferkelverkauf", "news", "galerie / videos", "geschichte", "kontakt"]
+    missing_nav = [n for n in nav_labels if n not in new_text]
+    check("all old nav labels present", not missing_nav, f"missing: {missing_nav}")
+    missing_legal = [t for t in ["impressum", "datenschutz"] if t not in new_text]
+    check("legal links (Impressum/Datenschutz) present", not missing_legal, f"missing: {missing_legal}")
+
     if os.environ.get("SKIP_EXTERNAL") != "1":
         ext = sorted({urljoin("https://www.kulmbacher-weideschwein.de/", a["href"]) for a in soup.find_all("a", href=True) if a["href"].startswith("http")})
         bad_links = []
