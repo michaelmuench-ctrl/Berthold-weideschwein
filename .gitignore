@@ -1,0 +1,3 @@
+tools/shop/out/
+__pycache__/
+*.pyc

@@ -1,0 +1,7 @@
+order_id,article,description,qty,unit,price_net,vat_rate,weight_kg,cooled
+2026-0001,Wurstpaket,"Salami, Schinken & Speck Auswahl",1,Stk,24.90,0.07,2.5,ja
+2026-0001,Weideschwein-Weisswurst,"6 Stück, vakuumiert",2,Pack,12.50,0.07,0.8,ja
+2026-0001,Wurst im Glas,"Rillettes vom Weideschwein",3,Glas,4.90,0.07,0.4,nein
+2026-0002,Rinderbraten,"Weiderind, ca. 1,2 kg",1,Stk,32.00,0.07,1.2,ja
+2026-0002,Bacon,"vom Weideschwein, 200 g",2,Pack,6.90,0.07,0.2,ja
+2026-0002,Honig," vom Hof, 250 g",1,Glas,5.50,0.19,0.4,nein
