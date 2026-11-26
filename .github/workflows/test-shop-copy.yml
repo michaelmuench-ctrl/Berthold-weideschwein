@@ -1,0 +1,30 @@
+name: test-shop-copy
+
+on:
+  push:
+    branches: [main]
+    paths: ["orders/**", "tools/shop/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: DHL-CSV + Lieferschein + Rechnung + Verdichtungspapier erzeugen
+        run: python3 tools/shop/generate.py
+
+      - name: Artefakt hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: shop-documents
+          path: tools/shop/out/
+          retention-days: 30
